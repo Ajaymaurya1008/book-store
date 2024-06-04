@@ -1,6 +1,7 @@
 'use client';
 import React, { useEffect, useState } from "react";
 import BookCard from "@/components/BookCard";
+import toast from "react-hot-toast";
 
 const FavouritePage = () => {
   const [books, setBooks] = useState([]);
