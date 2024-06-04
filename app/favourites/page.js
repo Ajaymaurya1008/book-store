@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from "react";
 import BookCard from "@/components/BookCard";
 
-const favouritePage = () => {
+const FavouritePage = () => {
   const [books, setBooks] = useState([]);
 
   const removeFavorite = (index) => {
@@ -47,4 +47,4 @@ const favouritePage = () => {
   );
 };
 
-export default favouritePage;
+export default FavouritePage;
