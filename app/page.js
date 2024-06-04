@@ -43,18 +43,14 @@ export default function Home() {
     }
   };
 
-  const addFavorite = (index) => {
+  const addFavorite = (index,key) => {
     try {
-      if (!books[index].bool) {
-        const prevBooks = localStorage.getItem("favoriteBooks");
-        const favoriteBooks = [
-          ...(prevBooks ? JSON.parse(prevBooks) : []),
-          books[index],
-        ];
-        const updatedBooks = books.map((book, idx) =>
-          idx === index ? { ...book, bool: true } : book,
-        );
-        setBooks(updatedBooks);
+      const prevBooks = localStorage.getItem("favoriteBooks")
+      const favoriteBooks =JSON.parse(prevBooks)
+      const isFavorite = favoriteBooks.some((book)=>book.key === key) 
+      console.log(isFavorite)
+      if (!isFavorite) {
+        favoriteBooks.push(books[index])
         localStorage.setItem("favoriteBooks", JSON.stringify(favoriteBooks));
         toast.success("Book added to favourites");
       } else {
@@ -62,6 +58,7 @@ export default function Home() {
       }
     } catch (error) {
       console.log(error);
+      console.log("There was an error adding the book to the favorites");
     }
   };
 
@@ -101,13 +98,13 @@ export default function Home() {
           </form>
         </div>
         <div className="mx-auto mt-16 flex w-full max-w-screen-lg flex-wrap items-center justify-center gap-6 rounded-xl">
-          {books.map((book, index) => (
+          {books.map((book,index) => (
             <BookCard
-              key={index}
+              key={book.key}
               title={book.title}
               editionCount={book.editionCount}
               btnName="Add to Favourites"
-              onClick={() => addFavorite(index)}
+              onClick={() => addFavorite(index,book.key)}
               heart={true}
             />
           ))}
