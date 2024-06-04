@@ -8,7 +8,6 @@ import { toast } from "react-hot-toast";
 export default function Home() {
   const [books, setBooks] = useState([]);
   const [search, setSearch] = useState("");
-  const [favoriteBooks, setFavoriteBooks] = useState([]);
 
   const fetchBooks = (e) => {
     e.preventDefault();
@@ -37,7 +36,11 @@ export default function Home() {
   };
 
   const addFavorite = (index) => {
-    setFavoriteBooks([...favoriteBooks, books[index]]);
+    const prevBooks = localStorage.getItem("favoriteBooks");
+    const favoriteBooks = [
+      ...(prevBooks ? JSON.parse(prevBooks) : []),
+      books[index],
+    ]
     localStorage.setItem("favoriteBooks", JSON.stringify(favoriteBooks));
     toast.success("Book added to favourites");
   };
@@ -57,19 +60,19 @@ export default function Home() {
           </p>
           <form
             onSubmit={fetchBooks}
-            className="abg-white relative mx-auto mt-8 w-full max-w-sm space-y-2 overflow-hidden rounded-lg sm:space-y-0"
+            className="abg-white relative px-4 sm:mx-auto mt-8 w-full max-w-sm space-y-2 overflow-hidden rounded-lg sm:space-y-0"
           >
             <input
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="w-full px-5 py-2 text-center text-black outline-none sm:text-left"
+              className="w-full rounded-md px-5 py-2 text-center text-black outline-none sm:text-left"
               type="text"
               placeholder="Search for a book"
               required
             />
             <button
               type="submit"
-              className="right-0 w-full bg-black px-8 py-2 text-white sm:absolute sm:w-auto"
+              className="right-0 w-full rounded-md sm:rounded-none bg-black px-8 py-2 text-white sm:absolute sm:w-auto"
             >
               Search
             </button>
