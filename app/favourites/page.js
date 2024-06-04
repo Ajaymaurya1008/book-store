@@ -27,11 +27,6 @@ const FavouritePage = () => {
         <h1 className="mt-10 text-center text-3xl font-bold text-white sm:mt-20 sm:text-5xl">
           Your favourite books
         </h1>
-        <p className="mt-6 text-center text-white">
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Iusto aut
-          hic, deserunt recusandae dolorem minus quaerat suscipit excepturi
-          doloribus nam labore? Voluptatem modi maxime iste.
-        </p>
       </div>
       <div className="mx-auto mt-16 flex w-full max-w-screen-lg flex-wrap items-center justify-center gap-6 rounded-xl">
         {books.map((book, index) => (

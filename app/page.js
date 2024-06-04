@@ -8,37 +8,39 @@ import { toast } from "react-hot-toast";
 export default function Home() {
   const [books, setBooks] = useState([]);
   const [search, setSearch] = useState("");
+  const [searching, setSearching] = useState(false);
 
-  const fetchBooks = (e) => {
+  const fetchBooks = async (e) => {
     e.preventDefault();
-    const fetchPromise = async () => {
-      const res = await axios.get(
-        `https://openlibrary.org/search.json?q=${search}&limit=10&page=1`,
-      );
-      return res;
-    };
+    setSearching(true);
 
-    toast
-      .promise(fetchPromise(), {
-        pending: "Fetching books",
-        success: "Books loaded successfully!",
-        error: "There was an error loading the books",
-      })
-      .then((res) => {
-        if (res.data) {
-          const newBooks = res.data.docs.map((book, index) => ({
-            key: book._version_,
-            title: book.title,
-            editionCount: book.edition_count,
-            bool: false,
-          }));
-          setBooks(newBooks);
-        }
-        console.log(res.data.docs);
-      })
-      .catch((err) => {
-        console.error(err);
-      });
+    const fetchPromise = axios.get(
+      `https://openlibrary.org/search.json?q=${search}&limit=10&page=1`,
+    );
+
+    toast.promise(fetchPromise, {
+      pending: "Fetching books",
+      success: "Books loaded successfully!",
+      error: "There was an error loading the books",
+    });
+
+    try {
+      const res = await fetchPromise;
+      if (res.data) {
+        const newBooks = res.data.docs.map((book) => ({
+          key: book._version_,
+          title: book.title,
+          editionCount: book.edition_count,
+          bool: false,
+        }));
+        setBooks(newBooks);
+      }
+      console.log(res.data.docs);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setSearching(false);
+    }
   };
 
   const addFavorite = (index) => {
@@ -90,7 +92,8 @@ export default function Home() {
             />
             <button
               type="submit"
-              className="right-0 w-full rounded-md bg-black px-8 py-2 text-white sm:absolute sm:w-auto sm:rounded-none"
+              disabled={searching}
+              className={`right-0 w-full rounded-md ${searching ? "bg-gray-400" : "bg-black"} px-8 py-2 text-white sm:absolute sm:w-auto sm:rounded-none`}
             >
               Search
             </button>
