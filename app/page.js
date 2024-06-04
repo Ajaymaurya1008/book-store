@@ -26,7 +26,13 @@ export default function Home() {
       })
       .then((res) => {
         if (res.data) {
-          setBooks(res.data.docs);
+          const newBooks = res.data.docs.map((book, index) => ({
+            key: book._version_,
+            title: book.title,
+            editionCount: book.edition_count,
+            bool: false,
+          }));
+          setBooks(newBooks);
         }
         console.log(res.data.docs);
       })
@@ -36,13 +42,25 @@ export default function Home() {
   };
 
   const addFavorite = (index) => {
-    const prevBooks = localStorage.getItem("favoriteBooks");
-    const favoriteBooks = [
-      ...(prevBooks ? JSON.parse(prevBooks) : []),
-      books[index],
-    ]
-    localStorage.setItem("favoriteBooks", JSON.stringify(favoriteBooks));
-    toast.success("Book added to favourites");
+    try {
+      if (!books[index].bool) {
+        const prevBooks = localStorage.getItem("favoriteBooks");
+        const favoriteBooks = [
+          ...(prevBooks ? JSON.parse(prevBooks) : []),
+          books[index],
+        ];
+        const updatedBooks = books.map((book, idx) =>
+          idx === index ? { ...book, bool: true } : book,
+        );
+        setBooks(updatedBooks);
+        localStorage.setItem("favoriteBooks", JSON.stringify(favoriteBooks));
+        toast.success("Book added to favourites");
+      } else {
+        toast.error("Book already added to favourites");
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
@@ -60,7 +78,7 @@ export default function Home() {
           </p>
           <form
             onSubmit={fetchBooks}
-            className="abg-white relative px-4 sm:mx-auto mt-8 w-full max-w-sm space-y-2 overflow-hidden rounded-lg sm:space-y-0"
+            className="abg-white relative mt-8 w-full max-w-sm space-y-2 overflow-hidden rounded-lg px-4 sm:mx-auto sm:space-y-0"
           >
             <input
               value={search}
@@ -72,7 +90,7 @@ export default function Home() {
             />
             <button
               type="submit"
-              className="right-0 w-full rounded-md sm:rounded-none bg-black px-8 py-2 text-white sm:absolute sm:w-auto"
+              className="right-0 w-full rounded-md bg-black px-8 py-2 text-white sm:absolute sm:w-auto sm:rounded-none"
             >
               Search
             </button>
@@ -83,7 +101,7 @@ export default function Home() {
             <BookCard
               key={index}
               title={book.title}
-              editionCount={book.edition_count}
+              editionCount={book.editionCount}
               btnName="Add to Favourites"
               onClick={() => addFavorite(index)}
               heart={true}

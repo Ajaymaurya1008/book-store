@@ -6,8 +6,8 @@ import toast from "react-hot-toast";
 const FavouritePage = () => {
   const [books, setBooks] = useState([]);
 
-  const removeFavorite = (index) => {
-    const newBooks = books.filter((book, i) => i !== index);
+  const removeFavorite = (key) => {
+    const newBooks = books.filter((book) => book.key !== key);
     setBooks(newBooks);
     localStorage.setItem("favoriteBooks", JSON.stringify(newBooks));
     toast.success("Book removed from favourites");
@@ -36,11 +36,11 @@ const FavouritePage = () => {
       <div className="mx-auto mt-16 flex w-full max-w-screen-lg flex-wrap items-center justify-center gap-6 rounded-xl">
         {books.map((book, index) => (
           <BookCard
-            key={index}
+            key={book.key}
             title={book.title}
-            editionCount={book.edition_count}
+            editionCount={book.editionCount}
             btnName="Remove"
-            onClick={() => removeFavorite(index)}
+            onClick={() => removeFavorite(book.key)}
           />
         ))}
       </div>
