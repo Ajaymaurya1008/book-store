@@ -74,9 +74,10 @@ export default function Home() {
             Your goto Book Store
           </h1>
           <p className="mt-6 text-center text-white">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Iusto aut
-            hic, deserunt recusandae dolorem minus quaerat suscipit excepturi
-            doloribus nam labore? Voluptatem modi maxime iste.
+            Discover a vast collection of books from various genres and authors.
+            Use our intuitive search feature to find your next read quickly and
+            easily. Add your favorite books to a personalized list for easy
+            access and future reference.
           </p>
           <form
             onSubmit={fetchBooks}
